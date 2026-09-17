@@ -7,9 +7,13 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbzogD2eCZPfidJ3WZLx56lZ
 let allDocuments = []; // Biến lưu trữ toàn bộ dữ liệu gốc
 
 // 2. HÀM TẢI DỮ LIỆU TỪ APPS SCRIPT
+// 2. HÀM TẢI DỮ LIỆU TỪ APPS SCRIPT
 async function fetchKhoHocLieu() {
     const container = document.getElementById("data-container");
-    container.innerHTML = `<div style="text-align: center; padding: 20px;">Đang tải dữ liệu từ kho...</div>`;
+    
+    if (container) {
+        container.innerHTML = `<div style="text-align: center; padding: 20px;">Đang tải dữ liệu từ kho...</div>`;
+    }
 
     try {
         const response = await fetch(API_URL);
@@ -18,18 +22,22 @@ async function fetchKhoHocLieu() {
         // Cập nhật biến toàn cục
         allDocuments = data;
         
-        // Cập nhật số lượng tài liệu hiển thị
-        document.querySelector("p[aria-live='polite']").innerHTML = `Hiển thị <span class="font-bold text-brand-red">${allDocuments.length}</span> tài liệu bám sát chương trình`;
+        // Cập nhật số lượng tài liệu hiển thị (Đã thêm lớp chống lỗi)
+        const countDisplayElement = document.querySelector("p[aria-live='polite']");
+        if (countDisplayElement) {
+             countDisplayElement.innerHTML = `Hiển thị <span class="font-bold text-brand-red">${allDocuments.length}</span> tài liệu bám sát chương trình`;
+        }
         
         // Hiển thị ra màn hình
         hienThiTaiLieu(allDocuments);
         
     } catch (error) {
         console.error("Lỗi kết nối API:", error);
-        container.innerHTML = `<div style="text-align: center; color: red;">Không thể kết nối đến máy chủ. Vui lòng tải lại trang.</div>`;
+        if (container) {
+            container.innerHTML = `<div style="text-align: center; color: red;">Không thể kết nối đến máy chủ. Vui lòng tải lại trang.</div>`;
+        }
     }
 }
-
 // 3. HÀM RENDER HTML GIAO DIỆN
 function hienThiTaiLieu(danhSachTaiLieu) {
     const container = document.getElementById("data-container");
