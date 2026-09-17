@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cổng Học Liệu & Đề Thi - Điểm 10+ (Portal Beta)</title>
+    
+    <link href="about:invalid#zCSafez" rel="icon" type="image/svg+xml">
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+    
+    <style>
+        /* CSS cơ bản cho layout */
+        :root { --primary-color: #e60000; --badge-new: #28a745; --badge-word: #0056b3; --badge-pdf: #dc3545; }
+        body { font-family: Arial, sans-serif; margin: 0; background-color: #f4f6f9; color: #333; }
+        .d10-header { background: #fff; padding: 15px 30px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .d10-header-top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+        .d10-search-bar { display: flex; gap: 5px; flex-grow: 0.5; min-width: 300px; }
+        .d10-search-bar input { width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; }
+        .d10-search-bar button { background: var(--primary-color); color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; }
+        .d10-nav { background: var(--primary-color); margin-top: 15px; border-radius: 4px; overflow-x: auto;}
+        .d10-nav ul { list-style: none; padding: 0; margin: 0; display: flex; white-space: nowrap; }
+        .d10-nav ul li a { display: block; padding: 12px 20px; color: white; text-decoration: none; font-weight: bold; }
+        .d10-nav ul li:hover { background: #cc0000; }
+        .d10-main { display: flex; max-width: 1200px; margin: 20px auto; gap: 20px; padding: 0 15px; flex-wrap: wrap; }
+        .d10-sidebar { width: 280px; background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); height: fit-content; flex-shrink: 0; }
+        .d10-filter-group { margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+        .d10-filter-group h3 { font-size: 16px; margin-top: 0; color: var(--primary-color); }
+        .d10-content { flex: 1; min-width: 0; }
+        .d10-doc-card { background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .d10-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; font-size: 12px; font-weight: bold; }
+        .badge { padding: 3px 8px; border-radius: 3px; color: white; }
+        .badge.new { background: var(--badge-new); }
+        .badge.word { background: var(--badge-word); }
+        .badge.pdf { background: var(--badge-pdf); }
+        .badge.matran { background: #ffc107; color: #000; }
+        .d10-trending { background: #fff9e6; padding: 10px; border-radius: 5px; border-left: 4px solid #ffc107; }
+        .d10-trending ul { padding-left: 20px; font-size: 14px; margin: 0; }
+        .d10-trending li { margin-bottom: 8px; }
+        
+        /* Modal Style */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; }
+        .modal-content { background: #fff; width: 90%; max-width: 400px; margin: 100px auto; padding: 20px; border-radius: 8px; text-align: center; }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="d10-header">
+    <div class="d10-header-top">
+        <div class="d10-logo-title" style="display: flex; align-items: center; gap: 15px;">
+            <a href="index.html" title="Hệ Thống Điểm 10+">
+                <!-- Tạm dùng text nếu chưa up file logo.png lên Repo -->
+                <div style="width: 50px; height: 50px; background: var(--primary-color); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; border-radius: 5px;">D10+</div>
+            </a>
+            <div>
+                <h1 style="margin: 0; font-size: 20px; color: var(--primary-color);">Cổng Học Liệu & Đề Thi</h1>
+                <p style="margin: 0; font-size: 13px; color: #666;">Hệ thống 7 cơ sở · GDPT 2018</p>
+            </div>
+        </div>
+
+        <!-- Thanh tìm kiếm -->
+        <div class="d10-search-bar">
+            <input type="text" id="searchInput" placeholder="Nhập từ khóa: Toán 12, Đề thi ĐGNL...">
+            <button id="searchBtn">Tìm kiếm</button>
+        </div>
+
+        <div class="d10-user-actions">
+            <span>👤 Học Sinh & Phụ Huynh</span>
+            <button onclick="document.getElementById('modal-teacher').style.display='block'" style="margin-left: 10px; padding: 8px 15px; background: #333; color: white; border: none; border-radius: 4px; cursor: pointer;">Giáo Viên Đăng Nhập</button>
+        </div>
+    </div>
+
+    <!-- Mega Menu -->
+    <nav class="d10-nav">
+        <ul>
+            <li><a href="#">Trang chủ</a></li>
+            <li><a href="#">Toán 10</a></li>
+            <li><a href="#">Toán 11</a></li>
+            <li><a href="#">Toán 12</a></li>
+            <li><a href="#">🔥 Luyện Thi THPT QG</a></li>
+            <li><a href="#">🎯 Đề Thi ĐGNL</a></li>
+            <li><a href="#">💡 Toán Thực Tế (GDPT 2018)</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main class="d10-main">
+    
+    <!-- SIDEBAR BỘ LỌC -->
+    <aside class="d10-sidebar">
+        <div>
+            <h2 style="font-size: 18px; margin-top: 0;">Bộ lọc tài liệu</h2>
+        </div>
+
+        <!-- Lọc theo Bộ Sách GDPT 2018 (Đã thêm Thống nhất lên đầu) -->
+        <div class="d10-filter-group">
+            <h3>📚 Bộ sách GDPT 2018</h3>
+            <label style="display: block; margin-bottom: 5px;"><input type="checkbox" value="thong-nhat"> Thống nhất</label>
+            <label style="display: block; margin-bottom: 5px;"><input type="checkbox" value="ket-noi"> Kết nối tri thức</label>
+            <label style="display: block; margin-bottom: 5px;"><input type="checkbox" value="chan-troi"> Chân trời sáng tạo</label>
+            <label style="display: block; margin-bottom: 5px;"><input type="checkbox" value="canh-dieu"> Cánh diều</label>
+        </div>
+
+        <div class="d10-filter-group">
+            <h3>🎓 Khối lớp</h3>
+            <label style="display: block;"><input type="radio" name="khoi" value="cap1"> Cấp 1 (Lớp 1-5)</label>
+            <label style="display: block;"><input type="radio" name="khoi" value="cap2"> Cấp 2 (Lớp 6-9)</label>
+            <label style="display: block;"><input type="radio" name="khoi" value="cap3"> Cấp 3 (Lớp 10-12)</label>
+        </div>
+
+        <div class="d10-filter-group">
+            <h3>📑 Danh mục tài liệu</h3>
+            <label style="display: block;"><input type="checkbox"> Đề thi Giữa Kì / Cuối Kì</label>
+            <label style="display: block;"><input type="checkbox"> Chuyên đề bồi dưỡng HSG</label>
+            <label style="display: block;"><input type="checkbox"> Đề khảo sát chất lượng</label>
+        </div>
+
+        <!-- Top tài liệu thịnh hành -->
+        <div class="d10-trending">
+            <h3 style="color: #b38000;">🔥 Xem nhiều tháng này</h3>
+            <ul>
+                <li><a href="#" style="color: #333; text-decoration: none;">Tổng ôn Đại số 12 - Kết nối tri thức</a> (1.2k lượt)</li>
+                <li><a href="#" style="color: #333; text-decoration: none;">Bộ 5 đề ĐGNL HCM 2026</a> (950 lượt)</li>
+                <li><a href="#" style="color: #333; text-decoration: none;">100 Bài Toán Thực Tế Lớp 9</a> (800 lượt)</li>
+            </ul>
+        </div>
+    </aside>
+
+    <!-- KHU VỰC HIỂN THỊ TÀI LIỆU -->
+    <div class="d10-content">
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+            <div>
+                <h2 style="margin: 0;">Kho Học Liệu & Đề Thi</h2>
+                <p style="margin: 5px 0 0 0; color: #666;">Đang hiển thị bản Demo - Kết nối Apps Script sau</p>
+            </div>
+            <select title="Sắp xếp danh sách tài liệu" style="padding: 5px; border-radius: 4px; border: 1px solid #ccc;">
+                <option value="newest">Sắp xếp: Mới cập nhật nhất</option>
+                <option value="views">Sắp xếp: Xem nhiều nhất</option>
+                <option value="name_asc">Tên tài liệu A → Z</option>
+            </select>
+        </div>
+
+        <div id="data-container">
+            <!-- Danh sách tài liệu 1 -->
+            <div class="d10-doc-card">
+                <div class="d10-badges">
+                    <span class="badge new">Cập nhật: 17/09/2026</span>
+                    <span class="badge word">📄 Bản Word (Cho GV)</span>
+                    <span class="badge pdf">📕 PDF (Cho HS)</span>
+                    <span class="badge matran">✅ Kèm Ma Trận & Đặc Tả</span>
+                </div>
+                
+                <h3 style="margin: 10px 0; color: var(--primary-color);">Đề kiểm tra Toán 12 tháng 9 năm 2026 - Bộ Thống Nhất</h3>
+                <p style="margin: 5px 0; font-size: 14px; color: #555;">
+                    Biên soạn: <strong>Thầy Phúc Huy Domingo</strong> | Lượt xem: 1,024
+                </p>
+                <p style="font-size: 14px; line-height: 1.5;">Mô tả: Bộ đề thi bám sát cấu trúc GDPT 2018 mới nhất, tích hợp các bài toán vận dụng thực tế. Phục vụ ôn tập định kỳ cho học sinh hệ thống 7 cơ sở Điểm 10+.</p>
+                
+                <button style="background: var(--primary-color); color: #fff; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; margin-top: 10px;">
+                    👁️ Đọc thử (3 trang đầu)
+                </button>
+            </div>
+
+            <!-- Danh sách tài liệu 2 -->
+            <div class="d10-doc-card">
+                <div class="d10-badges">
+                    <span class="badge new">Mới</span>
+                    <span class="badge pdf">📕 PDF</span>
+                </div>
+                <h3 style="margin: 10px 0; color: var(--primary-color);">Chuyên đề Tư duy logic ôn thi Đánh Giá Năng Lực (ĐGNL) 2026</h3>
+                <p style="margin: 5px 0; font-size: 14px; color: #555;">Biên soạn: Phòng Đào Tạo Điểm 10+ | Lượt xem: 856</p>
+                <p style="font-size: 14px; line-height: 1.5;">Mô tả: Chuyên đề tư duy logic, phân tích số liệu dùng cho kỳ thi ĐGNL ĐHQG TP.HCM. Tài liệu bao gồm các mẹo giải nhanh và bài tập vận dụng.</p>
+                <button style="background: var(--primary-color); color: #fff; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; margin-top: 10px;">
+                    👁️ Đọc thử (3 trang đầu)
+                </button>
+            </div>
+        </div>
+
+        <!-- Phân trang -->
+        <div style="text-align: center; margin-top: 30px;">
+            <button style="padding: 5px 10px; border: 1px solid #ccc; background: #fff; cursor: pointer;">&laquo; Trang trước</button>
+            <button style="padding: 5px 10px; border: 1px solid var(--primary-color); background: var(--primary-color); color: white; font-weight: bold;">1</button>
+            <button style="padding: 5px 10px; border: 1px solid #ccc; background: #fff; cursor: pointer;">2</button>
+            <button style="padding: 5px 10px; border: 1px solid #ccc; background: #fff; cursor: pointer;">3</button>
+            <button style="padding: 5px 10px; border: 1px solid #ccc; background: #fff; cursor: pointer;">Trang sau &raquo;</button>
+        </div>
+
+    </div>
+</main>
+
+<footer style="background: #333; color: white; text-align: center; padding: 20px; margin-top: 40px;">
+    <div>
+        <h3 style="margin: 0 0 10px 0;">Hệ Thống Trung Tâm Bồi Dưỡng Văn Hóa Điểm 10+</h3>
+        <p style="margin: 5px 0; font-size: 14px;">Cổng tra cứu học liệu nội bộ phục vụ Học sinh – Giáo viên – Phụ huynh</p>
+        <p style="margin: 5px 0; font-size: 14px;">Hotline Toàn Hệ Thống (24/7): <strong style="color: #ffc107;">0933 39 8787</strong></p>
+    </div>
+</footer>
+
+<!-- MODAL: XÁC THỰC GIÁO VIÊN -->
+<div id="modal-teacher" class="modal-overlay">
+    <div class="modal-content">
+        <h3 style="color: var(--primary-color); margin-top: 0;">Xác thực Giáo viên Điểm 10+</h3>
+        <p style="font-size: 14px; line-height: 1.5;">Nhập mã PIN do Phòng Đào Tạo cấp để tải bản <strong>Word</strong>, xem trọn bộ <strong>Đáp án chi tiết (SP3)</strong>, Barem chẩn đoán và <strong>Ma trận đặc tả</strong>.</p>
+        <input type="password" placeholder="Nhập mã PIN..." style="width: 80%; padding: 10px; margin: 15px 0; text-align: center; font-size: 18px; border: 1px solid #ccc; border-radius: 4px;">
+        <br>
+        <button style="background: var(--primary-color); color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Xác Nhận</button>
+        <button onclick="document.getElementById('modal-teacher').style.display='none'" style="background: #ccc; color: #333; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; margin-left: 10px; font-weight: bold;">Đóng</button>
+    </div>
+</div>
+
+<!-- KHU VỰC CHỨA JAVASCRIPT ĐỂ KẾT NỐI APPS SCRIPT SAU NÀY -->
+<script>
+    // Khu vực này để trống tạm thời. 
+    // Sếp/Người code sẽ copy đoạn script fetch dữ liệu từ trang cũ dán vào đây để làm cho bộ lọc và ô tìm kiếm hoạt động.
+    console.log("Giao diện d10hub v2 đã load thành công! Chờ ghép logic Apps Script.");
+</script>
+
+</body>
+</html>
